@@ -1,7 +1,7 @@
 {
   "name": "component-typefamily",
   "repository": "git://github.com/typefaces/component-typefamily.git",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "description": "A component command to create a typefamily component package via prompts from the command line.",
   "keywords": [
