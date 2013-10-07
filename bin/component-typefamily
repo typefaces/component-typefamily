@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+
+var find = require('findit');
+var fs = require('fs');
+var json = require('../package.json');
+var handlebars = require('handlebars');
+var mkdir = require('mkdirp');
+var moment = require('moment');
+var path = require('path');
+var program = require('commander');
+var slug = require('to-slug-case');
+
+
+/**
+ * Program.
+ */
+
+program
+  .version(json.version)
+  .description(json.description)
+  .parse(process.argv);
+
+
+/**
+ * Prompts.
+ */
+
+var prompts = {
+  name: 'name: ',
+  url: 'url: '
+};
+
+
+/**
+ * Ask the user for input.
+ *
+ * @param {Object} options
+ */
+
+program.prompt(prompts, function (options) {
+  parse(options);
+  find(resolve(__dirname, '../template'))
+    .on('file', function (file, stat) {
+      render(file, options);
+    })
+    .on('end', function () {
+      exit('Created typefamily package: ' + options.name + '.');
+    });
+});
+
+
+
+/**
+ * Exit with a `message`.
+ *
+ * @param {String} message
+ */
+
+function exit (message) {
+  console.log();
+  console.log(message);
+  console.log();
+  process.exit();
+}
+
+
+/**
+ * Parse `options`.
+ *
+ * @param {Object} options
+ */
+
+function parse (options) {
+  if (!options.name) throw new Error('Must provide a typeface name.');
+  if (!options.url) throw new Error('Must provide a URL.');
+
+  options.slug = slug(options.name);
+  options.date = moment().format('MMMM Do, YYYY');
+  options.dashes = new Array(options.date.length+1).join('-');
+}
+
+
+/**
+ * Render a handlebars `file` with `locals`.
+ *
+ * @param {String} file
+ * @param {Object} locals
+ */
+
+function render (file, locals) {
+  var content = fs.readFileSync(file, 'utf8');
+  var out = path.basename(file, path.extname(file));
+  var output = handlebars.compile(content)(locals);
+  fs.writeFileSync(resolve(out), output);
+}
+
+
+/**
+ * Resolve a file relative to this directory.
+ *
+ * @param {String} args...
+ */
+
+function resolve (args) {
+  args = [].slice.call(arguments);
+  return path.resolve.apply(path, args);
+}

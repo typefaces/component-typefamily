@@ -1,0 +1,26 @@
+{
+  "name": "component-typefamily",
+  "repository": "git://github.com/typefaces/component-typefamily.git",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "A component command to create a typefamily component package via prompts from the command line.",
+  "keywords": [
+    "component",
+    "command",
+    "plugin",
+    "font",
+    "typeface",
+    "typefamily"
+  ],
+  "dependencies": {
+    "commander": "1.0.5",
+    "findit": "~1.1.0",
+    "handlebars": "~1.0.12",
+    "mkdirp": "~0.3.4",
+    "moment": "~2.2.1",
+    "to-slug-case": "~0.1.2"
+  },
+  "bin": {
+    "component-typefamily": "bin/component-typefamily"
+  }
+}
